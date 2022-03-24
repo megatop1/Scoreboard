@@ -8,9 +8,9 @@ cp nagios4-cgi.conf.correct /etc/apache2/conf-enabled/nagios4-cgi.conf
 sudo systemctl restart apache2
 
 #Configure User Account
-$password = "password1!"
 sudo htdigest -c /etc/nagios4/htdigest.users Nagios4 nagiosadmin
-echo $password
-echo $password
 
 sudo systemctl restart apache2
+sudo systemctl restart nagios4
+sydo systemctl enable apache2
+sudo systemctl enable nagios4
