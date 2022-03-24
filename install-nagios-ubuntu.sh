@@ -1,41 +1,15 @@
-# Update packages
 sudo apt -y update
+sudo apt -y install nagios4 nagios-plugins-contrib nagios-nrpe-plugin
+sudo a2enmod authz_groupfile auth_digest
 
-# Install prereq packages
-sudo apt -y install wget unzip vim curl gcc openssl build-essential libgd-dev libssl-dev libapache2-mod-php php-gd php apache2
+cp <repo/nagios4-cgi.conf.correct> /etc/apache2/conf-enabled/nagios4-cgi.conf
 
-# Download Nagios Core
-export VER="4.4.6"
-$ curl -SL https://github.com/NagiosEnterprises/nagioscore/releases/download/nagios-$VER/nagios-$VER.tar.gz | tar -xzf -
-
-# Install Nagios
-cd nagios-4.4.6
-./configure
-
-# Compile main program
-sudo make all 
-
-# Create the group users 
-sudo make install-groups-users
-sudo usermod -a -G nagios www-data
-sudo make install
-
-# Run init script in /lib/systemd/system
-sudo make install-init
-
-# Install and configure permissions on the directory that contains the external command file
-sudo make install-commandmode
-
-# Install sample config files in /usr/local/nagios/etc
-sudo make install-config
-
-# Enable the Apache module required for Nagios web interface
-sudo make install-webconf
-sudo a2enmod rewrite cgi
 sudo systemctl restart apache2
 
-# Install the Nagios exfoliation theme as follows
-sudo make install-exfoliation
+#Configure User Account
+$password = "password1!"
+sudo htdigest -c /etc/nagios4/htdigest.users Nagios4 nagiosadmin
+echo $password
+echo $password
 
-# Create a Nagios login web user
-sudo htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+sudo systemctl restart apache2
